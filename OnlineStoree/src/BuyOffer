@@ -1,0 +1,89 @@
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public abstract class BuyOffer {
+	private String User_type;
+	
+	
+public String getUser_type() {
+		return User_type;
+}
+
+public void setUser_type(String user_type) {
+		this.User_type = user_type;
+}
+public int Calculate_offer(int result, int RequiredAmount) {
+      
+        if("User".equals(getUser_type()))
+        {
+			if(RequiredAmount == 1) {
+				return (int) (result-(result*0.05));
+			}
+
+else{
+				return (int) (result-(result*0.1));
+		}
+}
+		else if("StoreOwner".equals(getUser_type())) {
+			if(RequiredAmount == 1) {
+				return (int) (result-(result*0.15));
+			}
+
+else{
+				return (int) (result-(result*0.3));
+		}
+}
+		 return 0;
+    }
+public void BuyProduct() throws FileNotFoundException, IOException{
+    String targetProductName = "";
+    int RequiredAmount = 0; 
+    int result=0;
+    String Address = "";
+    Customer customer = new Customer();
+    AdministratorInterface admin = new AdministratorInterface();
+    PrintWriter BuyingDetails = new PrintWriter(new FileWriter("Cart.txt", true));
+    System.out.println("How many products you want to buy? " );
+    Scanner number = new Scanner(System.in);
+    int num = number.nextInt();
+    for(int i=1;i<=num;i++){ 
+    System.out.println("Please Enter your target product name:" );
+    Scanner ProductName = new Scanner(System.in);
+    targetProductName = ProductName.nextLine();
+    customer.ViewProducts();
+    System.out.println("\nPlease enter the required amount:  " );
+    Scanner amount = new Scanner(System.in);
+    RequiredAmount = amount.nextInt();
+   int Discount = Calculate_offer(result,RequiredAmount);  
+   String Dis = String.valueOf(Discount);
+   System.out.println("Congratulation you got an offer : " +Dis +" L.E"); 
+   System.out.println("\n Enter the shipping address:  " );
+    Scanner address = new Scanner(System.in);
+    Address = address.nextLine();
+    
+    BuyingDetails.append("Target Product : " + targetProductName + "\n" + "Required amount: " + RequiredAmount + "\n" +"Address: " +  Address + "\n");}
+    System.out.println("\nConfirm Information?  " );
+    Scanner confirmmation = new Scanner(System.in);
+    String confirm = confirmmation.nextLine();
+    if("yes".equals(confirm)){
+        if (admin.AcceptBuyingProduct() == true){
+         
+           System.out.println(" Product added to your cart Successfuly. ");
+           BuyingDetails.close();}
+    }
+    else{
+           
+           BuyingDetails.close();
+           System.out.println("Order is Canceled! ");
+          } 
+}
+       
+}
+
+		               
+
+
+    
